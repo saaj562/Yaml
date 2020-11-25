@@ -16,38 +16,38 @@ pipeline:
       stages:
         - stage: Build
           steps:
-            - sh 'mvn clean compile'
+            - bat 'mvn clean compile'
         - stage: Test
           steps:
             script:
-              - sh "mvn clean test -Dusers=${USERS}"
+              - bat "mvn clean test -Dusers=${USERS}"
         - stage: Install
           steps:
             script:
               - withCredentials: "[usernamePassword(credentialsId: 'mycustom-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]"
                 script:
-                - sh "mvn clean install -DskipTest -Dusername=${USERNAME} -Dpassword=${PASSWORD}"
+                - bat "mvn clean install -DskipTest -Dusername=${USERNAME} -Dpassword=${PASSWORD}"
               - withEnv: "['API_URL=https://api.ipify.org?format=json']"
                 script:
-                  - sh "curl ${API_URL}"
+                  - bat "curl ${API_URL}"
         - stage: Deploy
           when:
             - branch 'master'
           steps:
             script:
-              - sh "echo ${deploy}"
-              - sh 'mkdir deployment'
+              - bat "echo ${deploy}"
+              - bat 'mkdir deployment'
               - dir: "'deployment'"
                 script:
-                  - sh "cp ../target/*.jar ."
+                  - bat "cp ../target/*.jar ."
         - stage: Smoke Test
           parallel:
             - stage: Check Main Page
               steps:
-                - sh "curl https://api.ipify.org?format=json"
+                - bat "curl https://api.ipify.org?format=json"
             - stage: Check Other Page
               steps:
-                - sh "curl https://api.ipify.org?format=json"
+                - bat "curl https://api.ipify.org?format=json"
   post:
     always:
       - cleanWs()
