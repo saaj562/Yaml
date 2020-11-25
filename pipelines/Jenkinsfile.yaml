@@ -11,7 +11,7 @@ pipeline:
   stages:
     - stage: Checkout
       steps:
-        - git 'https://github.com/aytuncbeken/pipeline-as-yaml-tutorials.git'
+        - git 'https://github.com/saaj562/Yaml.git'
     - stage: Maven
       stages:
         - stage: Build
